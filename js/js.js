@@ -117,9 +117,9 @@
                    pushPlacemark();    
                 };
 
-                if(e.target.value == 'Ваше имя' || e.target.value == 'Укажите место' || e.target.value == 'Поделитесь впечатлениями') {
+                /*if(e.target.value == 'Ваше имя' || e.target.value == 'Укажите место' || e.target.value == 'Поделитесь впечатлениями') {
                     e.target.value = '';    
-                };
+                };*/
 
                 if(e.target.id == 'closePopup') {
                    closePopup();  
@@ -164,7 +164,7 @@
                     newLi.innerHTML = "<b>" + dataMap.name + "</b><br>" + dataMap.place + "<br>" + dataMap.text;
                     reviews.appendChild(newLi);
                         
-                    clearPopup(); 
+                    //clearPopup(); 
             };
 
             function openPopup(x, y) {
@@ -233,11 +233,11 @@
             };
 
 
-            function clearPopup() {
+            /*function clearPopup() {
                 name.value = 'Ваше имя';
                 place.value = 'Укажите место';
                 text.value = 'Поделитесь впечатлениями'; 
-            }
+            }*/
 
 
             //Прячем попап
