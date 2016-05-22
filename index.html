@@ -1,154 +1,71 @@
 <!DOCTYPE html>
-
+<html>
 <head>
-    <title>Геолокация</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <meta http-equiv='Content-type' content='charset=UTF-8'>
+    <link rel="stylesheet" href="https://necolas.github.io/normalize.css/4.1.1/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>          
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>   
-    <script src="js/js.js" type="text/javascript"></script>
-    <style rel="stylesheet" type="text/css" href="https://necolas.github.io/normalize.css/4.0.0/normalize.css"></style>
-    <style type="text/css">
-        html, body {
-            width: 100%;
-            height: 100%;
-            margin: 0;
-            padding: 0;
-            font-family: Arial;
-            font-size: 14px;
-        }
-        #map {
-            width: 100%;
-            height: 100%;
-            margin:0 auto;
-        }
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.2.0/require.min.js" data-main="js/js.js"></script>
 
-        #map a {
-        	text-decoration: underline;
-        	color: #00f;
-        }
-        .header {
-            padding: 5px;
-        }
-
-        .popup {
-            position: absolute;
-            top:10px;
-            left:10px;
-            width: 378px;
-            z-index:1000;
-            background-color: #fff;
-            display:none;
-            border-radius:10px;
-            overflow: hidden;
-            padding-bottom:15px;
-            /*height: 474px;*/
-        }
-
-        .popup>div:first-child {
-            background-color: #ff8663;
-            padding:12px 30px;
-            color:#fff;
-            background-image: url(img/spline.png);
-            background-repeat: no-repeat;
-            background-position: -9px -3px;
-        }
-
-        .closePopup {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 24px;
-            height: 22px;
-            background-image: url(img/spline.png);
-            background-repeat: no-repeat;
-            background-position: -15px -76px;
-        }
-
-        .popup>div:nth-child(2) {
-            height:149px;
-            overflow-y: scroll;
-        }
-        .popup>div:nth-child(2) ul { 
-            list-style-type: none; 
-            line-height:25px;                   
-        }
-        .popup>div:nth-child(3):before {
-            display:block;
-            content: '';
-            background-color: #ccc;
-            width:100%;
-            height:1px;
-            margin:0 auto;
-        }
-
-        .comment {
-            padding:12px 20px;
-        }
-
-        .comment h6 {
-            color: #ff8663;
-            font-size: 13px;
-            margin: 10px 0px;
-        }
-
-        .comment input, .comment textarea{
-            border:1px solid #ccc;
-            border-radius: 20px;
-            width:100%;
-            padding:9px;
-            color: #aaa;
-            box-sizing:border-box;
-            margin-bottom:12px;
-        }
-
-        .comment textarea {
-            resize: none; 
-        }
-
-        .submit {
-            border: 0px;
-            padding: 10px 15px;
-            background-color: #ff8663;
-            color: #fff;
-            border-radius: 9px;
-            float: right;
-        }
-
-    </style>
 </head>
 <body>
 
-
-    <div id="popup" class="popup">
-        <div><span id="addressMap">Текст</span><span id="closePopup" class="closePopup"></span></div>
-        <div>
-            <ul id="reviews">
-              
-            </ul>
-
-        </div>
-        <div id="comment" class="comment">
-            <h6>ОСТАВИТЬ ОТЗЫВ</h6>
-            <input placeholder="Ваше имя" type="text" id="name">
-            <input placeholder="Укажите место" type="text" id="place">
-            <textarea id="text" rows="5" placeholder="Поделитесь впечатлениями"></textarea>
-            <button id="submit" class="submit" type="submit">Добавить</button>
-        </div>  
-
-    </div>
-
-
- <script type="text/x-handlebars-template" id="itemTemplate">
-    {{#each list}}
-        <li>
-           <b>{{name}}</b><br> {{place}} <br> {{text}} 
-        </li>
-    {{/each}}
-</script>  
-
-
-
-
 <div id="map"></div>
+
+
+
+
+<script type="text/x-handlebars-template" id="popup">
+    <div class="headPopup">
+        <div>
+            <div>{{address}}</div>
+        </div>
+        <div>
+            <div class="close" data-button="close"></div>
+        </div>
+    </div>
+    <div class="bodyPopup">
+        <div class="listPopup">
+            <div>
+                {{#each reviews}}
+                <div>
+                    <div>Имя: {{name}}</div>
+                    <div>Место: {{place}}</div>
+                    <div class="textPopup"> Отзыв: {{text}}</div>
+                    <div class="data">{{formatDate date}}</div>                    
+                    <hr>
+                </div>
+                {{else}}
+                <div>Нет отзывов</div>
+                {{/each}}
+            </div>
+        </div>
+        <div class="formPopup">
+            <div>ОСТАВИТЬ ОТЗЫВ</div>
+            <form>
+                <input placeholder="Ваше имя" type="text" id="namePopup">
+                <input placeholder="Укажите место" type="text" id="placePopup">
+                <textarea placeholder="Поделитесь впечатлениями" id="textPopup"></textarea>
+                <button data-button="send">Добавить</button>
+            </form>
+        </div>
+    </div>
+</script>
+
+<script type="text/x-handlebars-template" id="balon">
+		<div class="balon">
+    <h2>{{properties.place}}</h2>
+    <div>
+        <div>
+            <a href="#" class="ballonLinck" data-x="{{properties.coords.x}}" data-y="{{properties.coords.y}}">
+                {{properties.address}}
+            </a>
+        </div>
+        <div>{{properties.text}}</div>
+    </div>
+    </div>
+</script>
 </body>
 </html>
